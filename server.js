@@ -1,5 +1,7 @@
 const express = require('express');
 const logger =  require("./middleware/logger")
+const helmet = require("helmet")
+const cors = require("cors")
 const welcomeRouter = require("./welcome/welcome-router")
 const userRouter = require("./users/userRouter")
 const postRouter = require("./posts/postRouter")
@@ -10,6 +12,8 @@ const port = process.env.PORT || 3100
 
 server.use(express.json())
 server.use(logger())
+server.use(cors())
+server.use(helmet())
 
 server.use(welcomeRouter)
 server.use("/api/users", userRouter)
