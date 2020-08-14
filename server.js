@@ -1,13 +1,30 @@
 const express = require('express');
+const logger =  require("./middleware/logger")
+const welcomeRouter = require("./welcome/welcome-router")
+const userRouter = require("./users/userRouter")
+const postRouter = require("./posts/postRouter")
 
-const server = express();
 
-server.get('/', (req, res) => {
-  res.send(`<h2>Let's write some middleware!</h2>`);
-});
+const server = express()
+const port = process.env.PORT || 3100
 
-//custom middleware
+server.use(express.json())
+server.use(logger())
 
-function logger(req, res, next) {}
+server.use(welcomeRouter)
+server.use("/api/users", userRouter)
+server.use("/api/posts", postRouter)
+
+server.use((err, req, res, next) => {
+    console.log(err)
+
+    res.status(500).json({
+        message: "something went wrong",
+    })
+})
+
+server.listen(port, () => {
+    console.log(`Server running on port ${port}`)
+})
 
 module.exports = server;
